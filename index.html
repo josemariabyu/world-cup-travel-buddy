@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup Travel Buddy</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Cargamos el script principal como módulo para poder usar import/export -->
+    <script type="module" src="js/main.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>⚽ World Cup Travel Buddy</h1>
+            <p>Tu compañero de viaje para el día del partido</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- Sección de Control: Selección de Selección Nacional -->
+        <section id="search-control">
+            <label for="team-selector">Selecciona tu Selección Nacional:</label>
+            <select id="team-selector">
+                <option value="">-- Elige un país --</option>
+                <option value="1">Argentina</option>
+                <option value="2">México</option>
+                <option value="3">España</option>
+                <option value="4">Estados Unidos</option>
+            </select>
+        </section>
+
+        <!-- Contenedor Principal de Resultados -->
+        <section id="dashboard" class="hidden">
+            <!-- Bloque API 1: Datos del Partido y Estadio -->
+            <article id="match-info">
+                <h2>Próximo Partido</h2>
+                <div id="match-card"><!-- Se llena dinámicamente con JS --></div>
+            </article>
+
+            <!-- Bloque API 2: Lugares para Comer Cercanos -->
+            <article id="places-info">
+                <h2>Dónde comer cerca del Estadio</h2>
+                <div class="filters">
+                    <button class="filter-btn" data-category="13003">Bares Deportivos</button>
+                    <button class="filter-btn" data-category="13035">Comida Rápida</button>
+                    <button class="filter-btn" data-category="13065">Restaurantes</button>
+                </div>
+                <div id="places-list"><!-- Se llena dinámicamente con JS --></div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 World Cup Travel Buddy - Final Project BYU-Pathway</p>
+    </footer>
+</body>
+</html>

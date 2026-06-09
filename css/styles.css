@@ -1,0 +1,93 @@
+/* Estilos Globales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Encabezado */
+header {
+    background-color: #2e7d32;
+    color: #ffffff;
+    padding: 20px text-align center;
+    border-bottom: 5px solid #fbc02d;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+/* Controles de Búsqueda */
+#search-control {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Tarjetas y Contenedores Dinámicos */
+.hidden {
+    display: none;
+}
+
+#dashboard {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+article {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #2e7d32;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f5f5f5;
+    padding-bottom: 5px;
+}
+
+/* Botones de Filtro */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background-color: #fbc02d;
+    color: #333;
+}
