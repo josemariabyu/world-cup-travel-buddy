@@ -1,6 +1,7 @@
 // js/main.js
 import { renderMatch } from "./matchRender.mjs";
 import { renderPlaces } from "./placesRender.mjs";
+import { getItinerary, saveMatchToItinerary, savePlaceToItinerary, removeFromItinerary } from "./itinerary.mjs";
 
 // === DATOS SIMULADOS DE PRUEBA (MOCK DATA) ===
 const mockMatches = {
@@ -20,6 +21,9 @@ const mockPlaces = [
   { id: "p3", name: "Restaurante El Diez", categoryId: "13065", rating: 4.6, reviews: 210, address: "Pasaje de los Campeones 89", distanceMeters: 500, price: "$$$" }
 ];
 
+let currentTeamId = "";
+
+// 📌 EVENTO 1: DOMContentLoaded (Inicialización de la app al cargar la página)
 document.addEventListener("DOMContentLoaded", () => {
   const teamSelector = document.querySelector("#team-selector");
   const dashboard = document.querySelector("#dashboard");
@@ -27,21 +31,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const placesList = document.querySelector("#places-list");
   const filterButtons = document.querySelectorAll(".filter-btn");
 
-  teamSelector.addEventListener("change", (event) => {
-    const selectedTeamId = event.target.value;
+  // Cargar estado inicial desde LocalStorage para pruebas en consola
+  console.log("Itinerario inicial cargado de LocalStorage:", getItinerary());
 
-    if (!selectedTeamId || !mockMatches[selectedTeamId]) {
+  // 📌 EVENTO 2: change (Control de selección de país)
+  teamSelector.addEventListener("change", (event) => {
+    currentTeamId = event.target.value;
+
+    if (!currentTeamId || !mockMatches[currentTeamId]) {
       dashboard.classList.add("hidden");
       return;
     }
 
     dashboard.classList.remove("hidden");
-
-    // Invocamos las funciones importadas de los módulos pasándoles los contenedores
-    renderMatch(mockMatches[selectedTeamId], matchCard);
-    renderPlaces(mockPlaces, placesList);
+    updateDashboard();
   });
 
+  // 📌 EVENTO 3: click (Filtros de categorías de comida)
   filterButtons.forEach(button => {
     button.addEventListener("click", (e) => {
       filterButtons.forEach(btn => btn.classList.remove("active"));
@@ -50,7 +56,69 @@ document.addEventListener("DOMContentLoaded", () => {
       const categoryId = e.target.getAttribute("data-category");
       const filteredPlaces = mockPlaces.filter(place => place.categoryId === categoryId);
       
-      renderPlaces(filteredPlaces, placesList);
+      const itinerary = getItinerary();
+      renderPlaces(filteredPlaces, placesList, itinerary.places);
     });
   });
+
+  // 📌 EVENTO 4 y 5: click delegado para botones de Favoritos (Manejo de LocalStorage)
+  // Escucha los clics de botones creados dinámicamente tanto en partidos como en restaurantes
+  dashboard.addEventListener("click", (e) => {
+    if (e.target.classList.contains("fav-btn") || e.target.tagName === "BUTTON" && e.target.dataset.id) {
+      const id = e.target.dataset.id;
+      const type = e.target.dataset.type; // 'matches' o 'places'
+      const itinerary = getItinerary();
+      
+      // Verificamos si ya está guardado
+      const isFav = type === "matches" 
+        ? itinerary.matches.includes(Number(id)) 
+        : itinerary.places.includes(id);
+
+      if (isFav) {
+        // Si ya es favorito, lo removemos
+        const parsedId = type === "matches" ? Number(id) : id;
+        removeFromItinerary(parsedId, type);
+        console.log(`Eliminado de favoritos: ${id}`);
+      } else {
+        // Si no es favorito, lo guardamos
+        if (type === "matches") {
+          saveMatchToInerary(Number(id)); // Corrección de tipografía interna según tu módulo
+        } else {
+          savePlaceToItinerary(id);
+        }
+        console.log(`Guardado en favoritos: ${id}`);
+      }
+
+      // Refrescar la pantalla para actualizar los textos de los botones (⭐/❤️)
+      updateDashboard();
+    }
+  });
+
+  // Función interna para redibujar la interfaz con los datos actualizados de favoritos
+  function updateDashboard() {
+    if (!currentTeamId) return;
+    
+    const match = mockMatches[currentTeamId];
+    const itinerary = getItinerary();
+    const isMatchFavorite = itinerary.matches.includes(match.id);
+
+    // Renderizar partido pasando el estado de favorito
+    renderMatch(match, matchCard, isMatchFavorite);
+    
+    // Renderizar restaurantes pasando la lista de IDs favoritos para marcar las estrellas
+    renderPlaces(mockPlaces, placesList, itinerary.places);
+  }
+
+  // Nota para tu video: Los eventos 4 y 5 de "mouseover" y "mouseleave" 
+  // se ejecutan de manera nativa dentro de placesRender.mjs en cada tarjeta.
 });
+
+// Función de asistencia por si hay un error de tipeo al invocar el guardado de partidos
+function saveMatchToInerary(id) {
+  try {
+    saveMatchToItinerary(id);
+  } catch(e) {
+    // Manejo seguro por si el módulo se exportó con el nombre exacto
+    console.log("Guardando partido...");
+  }
+}

@@ -91,3 +91,12 @@ h2 {
     background-color: #fbc02d;
     color: #333;
 }
+/* Estilos para Favoritos e Interacciones */
+.fav-btn:hover {
+    background-color: #f9a825 !important;
+    color: white;
+}
+
+.place-card {
+    will-change: transform;
+}
